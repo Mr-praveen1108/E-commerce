@@ -11,6 +11,7 @@ import {
 import { NAV_LINKS } from '../utils/constants'
 import { useTheme } from '../context/ThemeContext'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 
 const linkClass = ({ isActive }) =>
   `rounded-lg px-3 py-2 text-sm font-medium transition ${
@@ -28,7 +29,14 @@ export default function Navbar() {
   const navigate = useNavigate()
   const { toggleTheme, isDark } = useTheme()
   const { items } = useCart()
+  const { user, logout } = useAuth()
   const cartCount = items.reduce((n, row) => n + row.quantity, 0)
+
+  function handleLogout() {
+    logout()
+    setOpen(false)
+    navigate('/login')
+  }
 
   function onSearchSubmit(e) {
     e.preventDefault()
@@ -94,18 +102,18 @@ export default function Navbar() {
                 ) : null}
               </span>
             </NavLink>
-            <Link
-              to="/login"
+            <button
+              type="button"
+              onClick={handleLogout}
               className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800"
             >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:brightness-110"
-            >
-              Sign up
-            </Link>
+              Logout
+            </button>
+            {user?.name ? (
+              <span className="max-w-[120px] truncate text-sm font-medium text-slate-600 dark:text-slate-300">
+                Hi, {user.name}
+              </span>
+            ) : null}
             <button
               type="button"
               onClick={toggleTheme}
@@ -208,20 +216,18 @@ export default function Navbar() {
               </NavLink>
             ))}
             <div className="mt-4 grid gap-2 border-t border-slate-100 pt-4 dark:border-slate-800">
-              <Link
-                to="/login"
-                onClick={() => setOpen(false)}
+              {user?.name ? (
+                <p className="px-2 text-center text-sm text-slate-600 dark:text-slate-400">
+                  Signed in as <span className="font-semibold">{user.name}</span>
+                </p>
+              ) : null}
+              <button
+                type="button"
+                onClick={handleLogout}
                 className="rounded-xl border border-slate-200 py-3 text-center text-sm font-semibold dark:border-slate-700"
               >
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                onClick={() => setOpen(false)}
-                className="rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 py-3 text-center text-sm font-semibold text-white"
-              >
-                Sign up
-              </Link>
+                Logout
+              </button>
             </div>
           </nav>
         </aside>

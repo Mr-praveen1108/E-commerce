@@ -1,24 +1,30 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { useAuth } from '../context/AuthContext'
 
-/** Login form — demo only (no backend) */
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
+  const { login } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/'
 
   function handleSubmit(e) {
     e.preventDefault()
+    login(email, password, remember)
     toast.success(remember ? 'Welcome back! (session remembered)' : 'Welcome back!')
+    navigate(from, { replace: true })
   }
 
   return (
-    <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-12 sm:px-6">
+    <div className="mx-auto flex min-h-[70vh] max-w-md flex-1 flex-col justify-center px-4 py-12 sm:px-6">
       <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl dark:border-slate-800 dark:bg-slate-900">
         <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Welcome back</h1>
         <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-          Sign in to track orders and wishlists.
+          Sign in to browse ShopNest. Any email and password work for demo access.
         </p>
         <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
           <div>
@@ -59,9 +65,9 @@ export default function Login() {
               />
               Remember me
             </label>
-            <a href="#" className="font-semibold text-brand-600 hover:underline dark:text-brand-400">
-              Forgot password?
-            </a>
+            <span className="font-semibold text-brand-600 dark:text-brand-400">
+              Demo mode
+            </span>
           </div>
           <button
             type="submit"

@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { ThemeProvider } from './context/ThemeContext'
+import { AuthProvider } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
 import { WishlistProvider } from './context/WishlistContext'
 import ScrollToTop from './components/ScrollToTop'
@@ -10,9 +11,10 @@ import AppRoutes from './routes'
 export default function App() {
   return (
     <ThemeProvider>
-      <CartProvider>
-        <WishlistProvider>
-          <BrowserRouter>
+      <AuthProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <BrowserRouter>
             <ScrollToTop />
             <AppRoutes />
             <Toaster
@@ -23,9 +25,10 @@ export default function App() {
                 duration: 2800,
               }}
             />
-          </BrowserRouter>
-        </WishlistProvider>
-      </CartProvider>
+            </BrowserRouter>
+          </WishlistProvider>
+        </CartProvider>
+      </AuthProvider>
     </ThemeProvider>
   )
 }
